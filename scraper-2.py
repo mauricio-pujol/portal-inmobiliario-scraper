@@ -12,6 +12,9 @@ set_of_urls = set()
 next_page_url = True
 i = 0
 url = r'https://www.portalinmobiliario.com/venta/departamento/renaca-vina-del-mar-valparaiso-valparaiso/_OrderId_PRICE*DESC_NoIndex_True_item*location_lat:-32.97846822579704*-32.97434605890361,lon:-71.54722782799298*-71.53869840332563'
+numeric_values = re.findall(r'-?\d+\.\d+', url)
+start_coord = numeric_values[0],numeric_values[2]
+end_coord = numeric_values[1],numeric_values[3]
 while next_page_url:
     page = urlopen(url)
     html = page.read().decode("utf-8")
@@ -30,4 +33,4 @@ while next_page_url:
         next_page_url = False
         break
 
-
+print('Todas las páginas escaneadas')
