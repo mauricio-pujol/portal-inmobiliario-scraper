@@ -7,12 +7,13 @@ import time
 import numpy as np
 from openpyxl import load_workbook
 from datetime import datetime
+import os
 
 from utils import *
 from scraper_propery_page import * 
+
+print('Iniciando')
 # Url con la página 1 para iniciar la búsqueda. Debe especificarse una ciudad y rango de precios. #
-
-
 url = r'https://www.portalinmobiliario.com/venta/departamento/renaca-vina-del-mar-valparaiso-valparaiso/_OrderId_PRICE*DESC_NoIndex_True_item*location_lat:-32.97846822579704*-32.97434605890361,lon:-71.54722782799298*-71.53869840332563'
 # Extraer atributos del punto de partida, como el sector donde se buscará y las coordenadas. #
 search_details = get_url_details(url)
@@ -45,13 +46,11 @@ raw_columns = [
 
 # Inicializar un DataFrame vacío con las columnas
 raw_properties_df = pd.DataFrame(columns=raw_columns)
-for j in range(5):
+for j in range(2):
     print('Propiedad numero:',j,set_of_urls[j])
     raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
     print('Exito')
 
-
-    
 current_time_text = str(datetime.now()).replace(':','.')
 csv_name = search_details['operation']+'-' +search_details['property_type'] +'-'+search_details['location']+'_'+current_time_text+'.csv'
-raw_properties_df.to_csv(csv_name, index=False)
+raw_properties_df.to_csv(os.path.join('properties_raw_data', csv_name), index=False)
