@@ -10,11 +10,11 @@ from datetime import datetime
 import os
 
 from utils import *
-from scraper_propery_page import * 
+from fetch_property_data import * 
 
 print('Iniciando')
 # Url con la página 1 para iniciar la búsqueda. Debe especificarse una ciudad y rango de precios. #
-url = r'https://www.portalinmobiliario.com/venta/departamento/renaca-vina-del-mar-valparaiso-valparaiso/_OrderId_PRICE*DESC_NoIndex_True_item*location_lat:-32.97846822579704*-32.97434605890361,lon:-71.54722782799298*-71.53869840332563'
+url = r'https://www.portalinmobiliario.com/venta/departamento/_item*location_lat:-32.9808291550337*-32.97258484925159,lon:-71.54604587272846*-71.52898702339374'
 # Extraer atributos del punto de partida, como el sector donde se buscará y las coordenadas. #
 search_details = get_url_details(url)
 # Variables para empezar a iterar
