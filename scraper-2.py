@@ -6,17 +6,16 @@ from datetime import datetime
 import time
 import numpy as np
 from openpyxl import load_workbook
+from datetime import datetime
 
+from utils import *
+from scraper_propery_page import * 
 # Url con la página 1 para iniciar la búsqueda. Debe especificarse una ciudad y rango de precios. #
 
 
 url = r'https://www.portalinmobiliario.com/venta/departamento/renaca-vina-del-mar-valparaiso-valparaiso/_OrderId_PRICE*DESC_NoIndex_True_item*location_lat:-32.97846822579704*-32.97434605890361,lon:-71.54722782799298*-71.53869840332563'
 # Extraer atributos del punto de partida, como el sector donde se buscará y las coordenadas. #
-numeric_values = re.findall(r'-?\d+\.\d+', url)
-start_coord = numeric_values[0],numeric_values[2]
-end_coord = numeric_values[1],numeric_values[3]
-search_location = re.search(r'/departamento/([^/-]+)-', url).group(1)
-
+search_details = get_url_details(url)
 # Variables para empezar a iterar
 set_of_urls = set()
 next_page_url = True
@@ -37,4 +36,22 @@ while next_page_url:
     print('Propiedades encontradas hasta ahora:',len(set_of_urls),'Páginas revisadas:',i)
 
 set_of_urls = list(set_of_urls)
-print('Todas las páginas escaneadas con propiedades en',search_location)
+print('Todas las páginas escaneadas con propiedades en',search_details['location'])
+
+raw_columns = [
+    'url', 'title', 'published', 'price', 'maintenance', 'size', 'bedrooms', 'bathrooms',
+    'broker', 'adress', 'google_maps_pin', 'secondary_attributes', 'description'
+]
+
+# Inicializar un DataFrame vacío con las columnas
+raw_properties_df = pd.DataFrame(columns=raw_columns)
+for j in range(5):
+    print('Propiedad numero:',j,set_of_urls[j])
+    raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
+    print('Exito')
+
+
+    
+current_time_text = str(datetime.now()).replace(':','.')
+csv_name = search_details['operation']+'-' +search_details['property_type'] +'-'+search_details['location']+'_'+current_time_text+'.csv'
+raw_properties_df.to_csv(csv_name, index=False)
