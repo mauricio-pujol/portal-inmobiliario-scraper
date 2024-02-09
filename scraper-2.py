@@ -46,11 +46,18 @@ raw_columns = [
 
 # Inicializar un DataFrame vacío con las columnas
 raw_properties_df = pd.DataFrame(columns=raw_columns)
-for j in range(2):
+for j in range(1):
     print('Propiedad numero:',j,set_of_urls[j])
-    raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
-    print('Exito')
+    try:
+        raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
+        print('Exito')
+    except:
+        print('Fallido')
+        pass
 
 current_time_text = str(datetime.now()).replace(':','.')
 csv_name = search_details['operation']+'-' +search_details['property_type'] +'-'+search_details['location']+'_'+current_time_text+'.csv'
-raw_properties_df.to_csv(os.path.join('properties_raw_data', csv_name), index=False)
+path_save = os.path.join('properties_raw_data', csv_name)
+if not os.path.exists('properties_raw_data'):
+    os.makedirs('properties_raw_data')
+raw_properties_df.to_csv(path_save, index=False)
