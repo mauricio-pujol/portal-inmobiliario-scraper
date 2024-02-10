@@ -11,13 +11,15 @@ import os
 
 from utils import *
 from fetch_property_data import * 
+from locations import locations_coordinates
 
-print('Iniciando')
-# Url con la página 1 para iniciar la búsqueda. Debe especificarse una ciudad y rango de precios. #
-url = r'https://www.portalinmobiliario.com/venta/departamento/_item*location_lat:-32.9808291550337*-32.97258484925159,lon:-71.54604587272846*-71.52898702339374'
-# Extraer atributos del punto de partida, como el sector donde se buscará y las coordenadas. #
+location = 'renaca'
+print('Iniciando busqueda de propiedades en',location)
+try:
+    url = generate_location_url(locations_coordinates[location][0],locations_coordinates[location][1])
+except Exception as e:
+    print(f"Error: {e}")
 search_details = get_url_details(url)
-# Variables para empezar a iterar
 set_of_urls = set()
 next_page_url = True
 i = 0
@@ -37,7 +39,7 @@ while next_page_url:
     print('Propiedades encontradas hasta ahora:',len(set_of_urls),'Páginas revisadas:',i)
 
 set_of_urls = list(set_of_urls)
-print('Todas las páginas escaneadas con propiedades en',search_details['location'])
+print('Todas las páginas escaneadas con propiedades en',location)
 
 raw_columns = [
     'url', 'title', 'published', 'price', 'maintenance', 'size', 'bedrooms', 'bathrooms',
@@ -46,7 +48,7 @@ raw_columns = [
 
 # Inicializar un DataFrame vacío con las columnas
 raw_properties_df = pd.DataFrame(columns=raw_columns)
-for j in range(1):
+for j in range(30):
     print('Propiedad numero:',j,set_of_urls[j])
     try:
         raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
@@ -56,7 +58,7 @@ for j in range(1):
         pass
 
 current_time_text = str(datetime.now()).replace(':','.')
-csv_name = search_details['operation']+'-' +search_details['property_type'] +'-'+search_details['location']+'_'+current_time_text+'.csv'
+csv_name = search_details['operation']+'-' +search_details['property_type'] +'-'+location+'_'+current_time_text+'.csv'
 path_save = os.path.join('properties_raw_data', csv_name)
 if not os.path.exists('properties_raw_data'):
     os.makedirs('properties_raw_data')
