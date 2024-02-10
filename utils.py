@@ -52,5 +52,5 @@ def calculate_new_position(coord, distance, direction):
 def generate_location_url(start_point,end_point):
     prefix = r'https://www.portalinmobiliario.com/venta/departamento/_item*location_'
     lat = 'lat:'+str(start_point[0])+'*'+str(end_point[0])
-    lon = 'lot'+str(start_point[1])+'*'+str(end_point[1])
+    lon = 'lon'+str(start_point[1])+'*'+str(end_point[1])
     return(prefix+lat+','+lon)

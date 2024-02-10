@@ -22,6 +22,7 @@ n = 1
 for cell in grid_points:
     print('Escaneando celda:',n)
     url = generate_location_url(cell[0],cell[2])
+    print(url)
     search_details = get_url_details(url)
     set_of_urls = set()
     next_page_url = True
@@ -42,10 +43,9 @@ for cell in grid_points:
         except:
             next_page_url = False
         i+=1
-        print('Se revisaron',i,'páginas en el área de la celda',n,'y se encontraron',len(set_of_urls))
+        print('La celda',n,'contiene',i,'página/s y',len(set_of_urls),'propiedad/es.')
 
     set_of_urls = list(set_of_urls)
-    print('Todas las páginas escaneadas con propiedades en',location)
 
     raw_columns = [
         'url', 'title','type','published', 'price', 'maintenance', 'size', 'bedrooms', 'bathrooms',
@@ -53,11 +53,10 @@ for cell in grid_points:
     ]
     # Inicializar un DataFrame vacío con las columnas
     raw_properties_df = pd.DataFrame(columns=raw_columns)
-    for j in len(set_of_urls):
-        print('Propiedad numero:',j,set_of_urls[j])
+    for j in range(len(set_of_urls)):
+        print('Propiedad numero:',j+1,set_of_urls[j])
         try:
             raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
-            print('Exito')
         except:
             print('Fallido')
             pass
@@ -69,4 +68,3 @@ for cell in grid_points:
         os.makedirs('properties_raw_data')
     raw_properties_df.to_csv(path_save, index=False)
     n+=1
-    break

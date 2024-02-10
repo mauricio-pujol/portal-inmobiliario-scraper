@@ -32,10 +32,10 @@ def generate_search_grid_points(search_area_start_coord,search_area_end_coord):
     cell_bottom_left= area_bottom_left
     j= 1
     draw_grid = True
-    while draw_grid: # El área de busqueda de cada celda es 796mx460m.
-        cell_top_left = calculate_new_position(cell_bottom_left,460,'north')
-        cell_top_right = calculate_new_position(calculate_new_position(cell_bottom_left,460,'north'),796,'east')
-        cell_bottom_right= calculate_new_position(cell_bottom_left,796,'east')
+    while draw_grid: # El área de busqueda de cada celda es 796mx460m.  219.63xo 365.5
+        cell_top_left = calculate_new_position(cell_bottom_left,219.63,'north')
+        cell_top_right = calculate_new_position(calculate_new_position(cell_bottom_left,219.63,'north'),365.5,'east')
+        cell_bottom_right= calculate_new_position(cell_bottom_left,365.5,'east')
         grid_points.append([cell_bottom_left, cell_top_left, cell_top_right,cell_bottom_right,cell_bottom_left])
         cell_area = folium.Polygon(
             locations=[cell_bottom_left, cell_top_left, cell_top_right,cell_bottom_right,cell_bottom_left],
@@ -44,9 +44,9 @@ def generate_search_grid_points(search_area_start_coord,search_area_end_coord):
             fill_color='#3498db',  # Relleno en color azul claro
             fill_opacity=0.2
         )
-        cell_bottom_left = calculate_new_position(cell_bottom_left,700,'east')
+        cell_bottom_left = calculate_new_position(cell_bottom_left,300,'east')
         if cell_bottom_right[1] >area_bottom_right[1]:#Si se sale del recuadro horizontalmente
-            cell_bottom_left = calculate_new_position(area_bottom_left,400*j,'north')
+            cell_bottom_left = calculate_new_position(area_bottom_left,180*j,'north')
             j+=1
         if cell_top_right[0] > area_top_right[0] and cell_top_right[1] > area_top_right[1]: #Si se sale del recuadro horizontal y verticalmente
             draw_grid = False
