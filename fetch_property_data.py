@@ -34,10 +34,9 @@ def extract_property_raw_data(url):
         except:
             raw_maintenance = None
         raw_size = div_main_attributes.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[0].text
-        raw_bedrooms = div_main_attributes.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[1].text
-        raw_bathrooms = div_main_attributes.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[1].text
+        room_tags = soup.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[1:]
+        raw_rooms = [room.text for room in room_tags]
         raw_broker = div_main_attributes.find('div', class_='ui-vip-profile-info__info-link').text
-
         #property location attributes
         div_google_maps = soup.find('div', class_='ui-pdp-container__col col-1 ui-vip-core-container--content-left')
         raw_adress = div_google_maps.find('div', class_='ui-pdp-media__body').find('p', class_='ui-pdp-color--BLACK ui-pdp-size--SMALL ui-pdp-family--REGULAR ui-pdp-media__title').text
@@ -59,8 +58,7 @@ def extract_property_raw_data(url):
             'price': raw_price,
             'maintenance': raw_maintenance,
             'size': raw_size,
-            'bedrooms': raw_bedrooms,
-            'bathrooms': raw_bathrooms,
+            'rooms': raw_rooms,
             'broker': raw_broker,
             'adress': raw_adress,
             'google_maps_pin': raw_google_maps_pin,

@@ -3,6 +3,9 @@ import re
 import pandas as pd 
 import math
 import numpy as np
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+
 def get_url_location(url):
     url_location = dict()
     numeric_pattern = r'-?\d+\.\d+'
@@ -54,3 +57,12 @@ def generate_location_url(start_point,end_point):
     lat = 'lat:'+str(start_point[0])+'*'+str(end_point[0])
     lon = 'lon'+str(start_point[1])+'*'+str(end_point[1])
     return(prefix+lat+','+lon)
+
+def get_uf_currente_value():
+    url = r'https://www.uf-hoy.com/'
+    page = urlopen(url)
+    html = page.read().decode("utf-8")
+    soup = BeautifulSoup(html, "html.parser")
+    uf_value_str= soup.find('div', {'id': 'valor_uf'}).text.strip()
+    uf_value_flt = float(uf_value_str.replace('.', '').replace(',','.'))
+    return(uf_value_flt)
