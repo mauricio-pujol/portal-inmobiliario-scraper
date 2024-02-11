@@ -48,7 +48,7 @@ try:
         ]
     # Inicializar un DataFrame vacío con las columnas
     raw_properties_df = pd.DataFrame(columns=raw_columns)
-    for j in range(20):
+    for j in range(len(set_of_urls)):
         print('Propiedad numero:',j+1,set_of_urls[j])
         try:
             raw_properties_df = raw_properties_df.append(extract_property_raw_data(set_of_urls[j]))
