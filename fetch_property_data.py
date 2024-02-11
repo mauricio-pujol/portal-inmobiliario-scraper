@@ -35,11 +35,11 @@ def extract_property_raw_data(url):
             raw_maintenance = None
         raw_size = div_main_attributes.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[0].text
         room_tags = soup.find_all('div', class_='ui-pdp-highlighted-specs-res__icon-label')[1:]
-        raw_rooms = [room.text for room in room_tags]
+        raw_rooms = ','.join([room.text for room in room_tags])
         raw_broker = div_main_attributes.find('div', class_='ui-vip-profile-info__info-link').text
         #property location attributes
         div_google_maps = soup.find('div', class_='ui-pdp-container__col col-1 ui-vip-core-container--content-left')
-        raw_adress = div_google_maps.find('div', class_='ui-pdp-media__body').find('p', class_='ui-pdp-color--BLACK ui-pdp-size--SMALL ui-pdp-family--REGULAR ui-pdp-media__title').text
+        raw_address = div_google_maps.find('div', class_='ui-pdp-media__body').find('p', class_='ui-pdp-color--BLACK ui-pdp-size--SMALL ui-pdp-family--REGULAR ui-pdp-media__title').text
         raw_google_maps_pin = div_google_maps.find('div', class_='ui-vip-location__map').find('img')['src']
 
         #property secondary attributes
@@ -60,14 +60,15 @@ def extract_property_raw_data(url):
             'size': raw_size,
             'rooms': raw_rooms,
             'broker': raw_broker,
-            'adress': raw_adress,
+            'address': raw_address,
             'google_maps_pin': raw_google_maps_pin,
             'secondary_attributes': raw_secondary_attributes,
             'description':raw_description
             }
         raw_property = pd.DataFrame(raw_property,index= [0])
+        print(raw_property)
         return(raw_property)
     except:
         pass
 
-x = extract_property_raw_data(r'https://www.portalinmobiliario.com/venta/departamento/_NoIndex_True_item*location_lat:-32.97453380496371*-32.96628891146818,lon:-71.56781844655625*-71.55075959722153')
+#x = extract_property_raw_data(r'https://www.portalinmobiliario.com/venta/departamento/_NoIndex_True_item*location_lat:-32.97453380496371*-32.96628891146818,lon:-71.56781844655625*-71.55075959722153')
