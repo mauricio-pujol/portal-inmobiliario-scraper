@@ -66,7 +66,6 @@ def extract_property_raw_data(url):
             'description':raw_description
             }
         raw_property = pd.DataFrame(raw_property,index= [0])
-        print(raw_property)
         return(raw_property)
     except:
         pass
