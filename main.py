@@ -38,13 +38,13 @@ try:
         except:
             next_page_url = False
         i+=1
-        print('Se han escaneado',i,'página/s con un acumulado de',len(set_of_urls),'propiedades.')
+        print('Se han escaneado',i,'página/s con',len(set_of_urls),'propiedades.')
     total_properties_expected = soup.find('div','ui-search-search-result').span.text
-    print('Total de propiedades esperadas:', total_properties_expected)
+    print('Total de propiedades esperadas:', total_properties_expected.replace('.',''))
     set_of_urls = list(set_of_urls)
     raw_columns = [
-            'url', 'title','type','published', 'price', 'maintenance', 'size', 'bedrooms', 'bathrooms',
-            'broker', 'adress', 'google_maps_pin', 'secondary_attributes', 'description'
+            'url', 'title','type','published', 'price', 'maintenance', 'size', 'rooms',
+            'broker', 'address', 'google_maps_pin', 'secondary_attributes', 'description'
         ]
     # Inicializar un DataFrame vacío con las columnas
     raw_properties_df = pd.DataFrame(columns=raw_columns)
@@ -62,6 +62,7 @@ try:
     if not os.path.exists('properties_raw_data'):
         os.makedirs('properties_raw_data')
     raw_properties_df.to_csv(path_save, index=False)
+    print('Se generó el archivo',csv_name)
 except:
     print('No se pudo completar la busqueda.')
     pass
