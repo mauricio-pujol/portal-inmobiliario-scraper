@@ -1,7 +1,7 @@
 import pandas as pd 
 import os
-from utils import *
-directorio = 'properties_raw_data'
+from function_utils import *
+directorio = 'extracted_data'
 archivos_csv = [archivo for archivo in os.listdir(directorio) if archivo.endswith('.csv')]
 dataframes = []
 
@@ -10,6 +10,8 @@ for archivo in archivos_csv:
     ruta_completa = os.path.join(directorio, archivo)
     df = pd.read_csv(ruta_completa)
     df = df[~df['type'].str.contains('proyecto', case=False, na=False)] # Esto excluye los proyectos
+    date = re.search(r'(\d{4}-\d{2}-\d{2})',archivo).group(0)
+    df['load_date'] = date
     dataframes.append(df)
 
 # Concatenar los DataFrames en uno solo
@@ -117,23 +119,33 @@ def clean_age(age_input):
     else:
         return None
     
-
+def extract_orientation(orientation_input,orientation_selected):
+    if orientation_input is None or orientation_input.isdigit() or orientation_input in '-' or 'consult' in orientation_input.lower():
+        return None
+    if (orientation_selected[0:3].lower() in orientation_input.lower()) or (len(orientation_input) <= 4 and orientation_selected[0] in orientation_input) or 'tod' in orientation_input.lower():
+        return True
+    else:
+        return False
 
 raw_merge_df
 uf_value = get_uf_currente_value()
 
-clean_df = raw_merge_df[['url','title','type','broker','address']]
+clean_df = raw_merge_df[['url','title','type','broker','address']].copy()
 clean_df['published_days'] = raw_merge_df['published'].apply(calculate_days)
 clean_df['price_uf'] = raw_merge_df['price'].apply(clean_to_uf,uf_current_value = uf_value)
 clean_df['price_clp'] = raw_merge_df['price'].apply(clean_to_clp,uf_current_value = uf_value)
 clean_df['maintenance'] = raw_merge_df['maintenance'].apply(clean_maintenance)
 clean_df['size_m2'] = raw_merge_df['size'].apply(clean_size)
+clean_df['price_uf_m2'] =(clean_df['price_uf']/clean_df['size_m2']).round(1)
 clean_df['bedrooms'] = raw_merge_df['rooms'].apply(clean_room, room_type='dormitorio').astype('Int64').fillna(0)
 clean_df['bathrooms'] = raw_merge_df['rooms'].apply(clean_room, room_type='baño')
 clean_df['location_latitude'] = raw_merge_df['google_maps_pin'].apply(clean_map_location).apply(lambda x: x['latitude'])
 clean_df['location_longitude'] = raw_merge_df['google_maps_pin'].apply(clean_map_location).apply(lambda x: x['longitude'])
-clean_df['orientation'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación').apply(clean_orientation)
-clean_df['orientation_original'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación')
+clean_df['orientation'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación')
+clean_df['orientation_north'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación').apply(extract_orientation,orientation_selected = 'Norte')
+clean_df['orientation_south'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación').apply(extract_orientation,orientation_selected = 'Sur')
+clean_df['orientation_east'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación').apply(extract_orientation,orientation_selected = 'Oriente')
+clean_df['orientation_west'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Orientación').apply(extract_orientation,orientation_selected = 'Poniente')
 clean_df['pool'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Piscina').apply(clean_orientation).map({"Sí": True, "No": False, None: False})
 clean_df['parking'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Estacionamientos').astype(int)
 clean_df['elevator'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Ascensor').map({"Sí": True, "No": False, None: False})
@@ -141,3 +153,5 @@ clean_df['balcony'] = raw_merge_df['secondary_attributes'].apply(clean_secondary
 clean_df['storage'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Bodegas').fillna(0).astype(int).apply(lambda x: None if x > 5 else int(x))
 clean_df['age'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Antigüedad').apply(clean_age)
 clean_df['floor'] = raw_merge_df['secondary_attributes'].apply(clean_secondary_details, detail_type='Número de piso de la unidad').apply(lambda x: int(x) if x is not None and x.isdigit() and int(x) <= 50 else None)
+clean_df['load_date'] = raw_merge_df['load_date']
+clean_df
