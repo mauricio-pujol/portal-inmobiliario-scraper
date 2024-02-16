@@ -2,7 +2,7 @@ import folium
 from IPython.display import display
 import numpy as np
 import math
-from utils import calculate_new_position
+from function_utils import calculate_new_position
 
 def generate_search_grid_points(search_area_start_coord,search_area_end_coord):
     # Calcular las coordenadas de las otras dos esquinas del rectángulo
@@ -89,3 +89,33 @@ def generate_search_grid_points(search_area_start_coord,search_area_end_coord):
 #search_area_start_point= list([-32.98643, -71.55181])
 #search_area_end_point = list([-32.95199, -71.52434])
 #generate_search_grid_points(search_area_start_point,search_area_end_point)
+
+
+    import folium
+    from IPython.display import display
+    import numpy as np
+    import math
+    search_area_start_coord= list([-32.98643, -71.55181])
+    search_area_end_coord = list([-32.95199, -71.52434])
+    area_bottom_left = list([search_area_start_coord[0], search_area_start_coord[1]])
+    area_bottom_right = list([search_area_start_coord[0], search_area_end_coord[1]]) 
+    area_top_left = list([search_area_end_coord[0], search_area_start_coord[1]])
+    area_top_right = list([search_area_end_coord[0], search_area_end_coord[1]]) 
+
+    # Calcular el centro del rectángulo
+    lat_center = (search_area_start_coord[0] + search_area_end_coord[0]) / 2
+    lon_center = (search_area_start_coord[1] + search_area_end_coord[1]) / 2
+    # Crear un mapa centrado en el centro del rectángulo
+    mapa = folium.Map(location=[lat_center, lon_center], zoom_start=13)
+
+    # Agregar el rectángulo al mapa
+    search_area = folium.Polygon(
+        locations=[area_bottom_left, area_bottom_right, area_top_right, area_top_left],
+        color='#3498db',  # Bordes en color naranja
+        fill=True,
+        fill_color='#3498db',  # Relleno en color azul claro
+        fill_opacity=0.1
+    )
+    for i in range(len(clean_df)):
+        folium.Marker(location=[clean_df['location_latitude'][i], clean_df['location_longitude'][i]], popup=clean_df['price_uf'][i]/clean_df['size_m2'][i]).add_to(mapa)
+    display(mapa)

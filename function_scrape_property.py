@@ -15,6 +15,8 @@ import time
 def extract_property_raw_data(url):
     option = webdriver.ChromeOptions()
     option.add_argument('--headless')
+    option.add_argument('--disable-gpu')
+    option.add_argument('--disable-images') 
     driver = webdriver.Chrome(options = option)
     driver.get(url)
     driver.refresh()
