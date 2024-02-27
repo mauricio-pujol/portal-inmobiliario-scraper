@@ -6,11 +6,11 @@
 Required steps to achieve this are:
 - Retrieve semi-structured html.
 - Clean and transform it into a tabular data structure.
-- Store it for further analysis. <span style="color:Tomato;">(to do: Store on cloud.)</span>
+- Store it for further analysis. <span style="color:red;">(to do: Store on cloud.)</span>
 
 Future ideas to be developed include estimating if a specific property for sale is under or over its market value, according to its attributes, neighbor properties attributes and prices, city and historic market trends as well.
 
-<span style="color:Tomato;">(to do: Dockerize.)</span>
+<span style="color:red;">(to do: Dockerize.)</span>
 
 
 ## Requirements
@@ -21,7 +21,7 @@ Ensure to have the following libraries. Version used is specified as well:
 - numpy = 1.26.1
 - openpyxl = 3.1.2
 
-<span style="color:Tomato;">(to do: Migrate to a requirements.txt)</span>
+<span style="color:red;">(to do: Migrate to a requirements.txt)</span>
 
 
 ## Usage
@@ -35,7 +35,7 @@ This section explains what every .py file does for every stage of the ETL proces
     1. Given a property URL as an input, retrieves its html and scrapes it using `Beautiful Soup`.
     2. From the this html, extract relevant attributes of the scanned property such as: title, description, price, maintenance_cost, size, number of bedrooms and bathrooms, coordinates, broker and other secondary attributes.
     3. Returns a 1-row dataframe containing this property scraped data.
-<span style="color:Tomato;">(to do: optimize waiting time while requesting html.)</span>
+<span style="color:red;">(to do: optimize waiting time while requesting html.)</span>
 
 - `main_extraction.py`: This is the main script that runs the **Extraction Stage**. These are, in general terms, the steps:
     1. Starts by defining a city to scan properties. For example, set `location` to “Reñaca”, a coastal city in Chile. The city must be predefined in the fixed dictionary locations_url, which is called from `dictionary_locations.py` file.
@@ -55,8 +55,8 @@ This section explains what every .py file does for every stage of the ETL proces
         - Transform to integer text fields such as '2 baños' (2 bathrooms).
         - Transform orientation to a bool column. The input for North orientation may come as 'N', 'Nor', 'NO', and so on. Transform into a boolean column named `orientation_north`.
 
-<span style="color:Tomato;">(to do: migrate to a new functions_clean.py)</span>
+<span style="color:red;">(to do: migrate to a new functions_clean.py)</span>
 
-<span style="color:Tomato;">(to do: Complete Transformation process by saving the clean data dataframe resulting)</span>
+<span style="color:red;">(to do: Complete Transformation process by saving the clean data dataframe resulting)</span>
 ## Configuration
 Explain any configuration option or settings in the .py files
