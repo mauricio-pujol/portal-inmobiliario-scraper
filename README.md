@@ -12,7 +12,6 @@ Future ideas to be developed include estimating if a specific property for sale 
 
 <span style="color:red;">(to do: Dockerize.)</span>
 
-
 ## Requirements
 Ensure to have the following libraries. Version used is specified as well:
 - pandas = 2.1.1
