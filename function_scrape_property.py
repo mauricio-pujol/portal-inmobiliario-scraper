@@ -1,5 +1,4 @@
 
-#url = r'https://www.portalinmobiliario.com/MLC-1445907571-el-encanto-a-una-cuadra-de-av-borgono-linda-vista-al-mar-_JM#position=24&search_layout=grid&type=item&tracking_id=b2d8e76f-5bb0-488c-a1fe-771f1981fc5a'
 url = r'https://www.portalinmobiliario.com/MLC-1461323009-departamento-edificio-las-terrazas-vina-del-mar-_JM#reco_item_pos=2&reco_backend=triggered_realestate_recommendations&reco_backend_type=function&reco_client=classi-realestate-vip&reco_id=f08aab98-86bc-435d-98eb-acbb87579e67&referred_item_status=closed'
 
 from selenium import webdriver
@@ -73,3 +72,4 @@ def extract_property_raw_data(url):
         pass
 
 #x = extract_property_raw_data(r'https://www.portalinmobiliario.com/venta/departamento/_NoIndex_True_item*location_lat:-32.97453380496371*-32.96628891146818,lon:-71.56781844655625*-71.55075959722153')
+x = extract_property_raw_data(url)

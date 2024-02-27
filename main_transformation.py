@@ -1,24 +1,19 @@
 import pandas as pd 
 import os
 from function_utils import *
-directorio = 'extracted_data'
-archivos_csv = [archivo for archivo in os.listdir(directorio) if archivo.endswith('.csv')]
+directory = 'extracted_data'
+csv_files = [file for file in os.listdir(directory) if file.endswith('.csv')]
 dataframes = []
 
-# Iterar sobre cada archivo y cargarlo en un DataFrame
-for archivo in archivos_csv:
-    ruta_completa = os.path.join(directorio, archivo)
+for file in csv_files:
+    ruta_completa = os.path.join(directory, file)
     df = pd.read_csv(ruta_completa)
     df = df[~df['type'].str.contains('proyecto', case=False, na=False)] # Esto excluye los proyectos
-    date = re.search(r'(\d{4}-\d{2}-\d{2})',archivo).group(0)
+    date = re.search(r'(\d{4}-\d{2}-\d{2})',file).group(0)
     df['load_date'] = date
     dataframes.append(df)
 
-# Concatenar los DataFrames en uno solo
 raw_merge_df = pd.concat(dataframes, ignore_index=True)
-
-#raw_merge_df.to_excel('raw_merge_df.xlsx', index=False)
-
 
 def calculate_days(description):
     match = re.search(r'(\d+)', description)
