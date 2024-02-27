@@ -57,5 +57,3 @@ This section explains what every .py file does for every stage of the ETL proces
 <span style="color:red;">(to do: migrate to a new functions_clean.py)</span>
 
 <span style="color:red;">(to do: Complete Transformation process by saving the clean data dataframe resulting)</span>
-## Configuration
-Explain any configuration option or settings in the .py files
