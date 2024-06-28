@@ -13,7 +13,7 @@ from function_utils import *
 from function_scrape_property import * 
 from dictionary_locations import locations_url
 
-location = 'Reñaca' # Specify the city or area to search for properties. The URL for the location to be searched should be defined in the location.py file.
+location = 'Viña del Mar' # Specify the city or area to search for properties. The URL for the location to be searched should be defined in the location.py file.
 url = locations_url[location] # locations_url is a dictionary defined in locations.py which contains location:url to search.
 print('Initializing property scraper for',location,'\n',url)
 try: # Before scraping individual webpages, a set of all propertys urls to scan is generated.
@@ -23,16 +23,17 @@ try: # Before scraping individual webpages, a set of all propertys urls to scan 
     next_page_url = True
     i = 0
     while next_page_url: # Iterate until there's no "next page" to look for.
+        print(url)
         page = urlopen(url)
         html = page.read().decode("utf-8")
         soup = BeautifulSoup(html, "html.parser")
-        href_links = soup.find_all('a', class_='ui-search-result__image ui-search-link', href=True)
+        href_links = soup.find_all('a', class_='ui-search-result__image ui-search-link', href=True) # Extracts all urls of propertys in current page
         for link in href_links:
             set_urls.add(link.get('href'))
         next_page = soup.find_all('a', class_='andes-pagination__link', href=True)
         try:
-            if soup.find_all('a', class_='andes-pagination__link', href=True)[1].get('href') != '': # Looks for the "next page" URL. If it isn't found, then all pages were scanned.
-                url = soup.find_all('a', class_='andes-pagination__link', href=True)[1].get('href')
+            if soup.find_all('a', class_='andes-pagination__link', href=True)[-1].get('href') != '': # Looks for the "next page" URL. If it isn't found, then all pages were scanned.
+                url = soup.find_all('a', class_='andes-pagination__link', href=True)[-1].get('href')
             else:
                 next_page_url = False
         except:
